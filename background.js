@@ -36,7 +36,8 @@ chrome.commands.onCommand.addListener(function (command) {
         addTechnicalNames();
     else if (command == "pop")
         pop();
-
+    else if (command == "show-select-field-values")
+        showSelectFieldValues();
 });
 
 // chrome.runtime.onMessageExternal.addListener(
@@ -63,6 +64,7 @@ chrome.contextMenus.create({ "id": "opentablelist", "parentId": "goto", "title":
 chrome.contextMenus.create({ "id": "tools", "contexts": ["all"], "title": "Tools" });
 chrome.contextMenus.create({ "id": "popinout", "parentId": "tools", "title": "PopIn / PopOut", "contexts": ["all"], "onclick": togglePop });
 chrome.contextMenus.create({ "id": "shownames", "parentId": "tools", "title": "Show technical names", "contexts": ["all"], "onclick": addTechnicalNames });
+chrome.contextMenus.create({ "id": "showselectfieldvalues", "parentId": "tools", "title": "Show Select-field values", "contexts": ["all"], "onclick": showSelectFieldValues });
 chrome.contextMenus.create({ "id": "canceltransaction", "parentId": "tools", "title": "Cancel transactions", "contexts": ["all"], "onclick": function (e, f) { openUrl(e, f, '/cancel_my_transactions.do'); } });
 //chrome.contextMenus.create({ "id": "canceltransaction", "parentId": "tools", "title": "Cancel transactions", "contexts": ["all"], "onclick": function (e, f) { cancelTransactions(e); } });
 chrome.contextMenus.create({ "id": "props", "parentId": "tools", "title": "Properties", "contexts": ["all"], "onclick": function (e, f) { openUrl(e, f, '/sys_properties_list.do') } });
@@ -173,6 +175,14 @@ function addTechnicalNames() {
 
         })
 
+}
+
+function showSelectFieldValues() {
+    chrome.tabs.query(
+        { currentWindow: true, active: true },
+        function (tabs) {
+            chrome.tabs.sendMessage(tabs[0].id, { method: "runFunction", myVars: "showSelectFieldValues();", funtion() { } });
+        });
 }
 
 

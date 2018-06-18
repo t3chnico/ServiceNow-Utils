@@ -3,7 +3,7 @@
     "short_name": "ServiceNow Utils",
     "description": "ServiceNow Productivity tools. (Personal work, not affiliated to ServiceNow)",
     "author": "Arnoud Kooi / arnoudkooi.com",
-    "version": "2.4.0",
+    "version": "2.5.0",
     "permissions": [
         "activeTab",
         "https://*.service-now.com/*",
@@ -51,23 +51,30 @@
     "commands": {
         "_execute_page_action": {
             "suggested_key": {
-                "default": "Ctrl+1",
+                "default": "Alt+1",
                 "mac": "Command+1"
             }
         },
         "pop": {
             "suggested_key": {
-                "default": "Ctrl+2",
+                "default": "Alt+2",
                 "mac": "Command+2"
             },
             "description": "Pop-In / Pop-Out"
         },
         "show-technical-names": {
             "suggested_key": {
-                "default": "Ctrl+3",
+                "default": "Alt+3",
                 "mac": "Command+3"
             },
             "description": "Show Technical Names"
+        },
+        "show-select-field-values": {
+            "suggested_key": {
+                "default": "Alt+4",
+                "mac": "Command+4"
+            },
+            "description": "Show Select-field values"
         }
     },
     "page_action": {

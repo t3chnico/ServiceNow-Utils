@@ -200,6 +200,20 @@ function addTechnicalNames() {
     });
 }
 
+function showSelectFieldValues() {
+    if (typeof jQuery == 'undefined') return; //not in studio
+
+    jQuery('option').not(":contains('|')").each(function(i,el) {
+        var jqEl = jQuery(el);
+        jqEl.html(el.text + ' | ' + el.value);
+    });
+
+    jQuery('#tableTreeDiv td.tree_item_text > a').not(":contains('|')").each(function(i,el) {
+        var jqEl = jQuery(el);
+        jqEl.html(el.text + ' | ' + el.name);
+    });
+}
+
 function setShortCuts() {
 
     document.addEventListener("keydown", function (event) {
