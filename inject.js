@@ -27,11 +27,17 @@ if (typeof jQuery != "undefined") {
         setShortCuts();
         bindPaste();
         initializeAutocomplete();
+        extendReferenceIconsToOpenInTabs();
     
         //Initialize Alert
         var alertContainer = '<div class="notification-container service-now-util-alert" role="alert" style="top: 20px;"><div class="notification outputmsg outputmsg_has_text"><span class="outputmsg_text role="alert"></span></div></div>';
         jQuery('header').prepend(alertContainer);
     });
+}
+
+function extendReferenceIconsToOpenInTabs() {
+    //EXPERIMENTAL: this allows to hold Ctrl to open the current form in a new tab
+    jQuery('[data-type=reference_popup]').attr('href','#');
 }
 
 function initializeAutocomplete(array) {
