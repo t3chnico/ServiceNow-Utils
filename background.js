@@ -62,6 +62,8 @@ chrome.contextMenus.create({ "id": "instancesearch", "parentId": "goto", "title"
 chrome.contextMenus.create({ "id": "openscript", "parentId": "goto", "title": "Script Include: %s", contexts: ["selection"], "onclick": openScriptInclude });
 chrome.contextMenus.create({ "id": "opentablelist", "parentId": "goto", "title": "Table list: %s", contexts: ["selection"], "onclick": openTableList });
 chrome.contextMenus.create({ "id": "openprop", "parentId": "goto", "title": "System Property: %s", contexts: ["selection"], "onclick": openSysProperty });
+chrome.contextMenus.create({ "id": "openuipolicies", "parentId": "goto", "title": "UI Policies: %s", contexts: ["selection"], "onclick": openUiPolicies });
+chrome.contextMenus.create({ "id": "openuipolicyactions", "parentId": "goto", "title": "UI Policy Actions: %s", contexts: ["selection"], "onclick": openUiPolicyActions });
 chrome.contextMenus.create({ "id": "tools", "contexts": ["all"], "title": "Tools" });
 chrome.contextMenus.create({ "id": "popinout", "parentId": "tools", "title": "PopIn / PopOut", "contexts": ["all"], "onclick": togglePop });
 chrome.contextMenus.create({ "id": "shownames", "parentId": "tools", "title": "Show technical names", "contexts": ["all"], "onclick": addTechnicalNames });
@@ -70,8 +72,7 @@ chrome.contextMenus.create({ "id": "canceltransaction", "parentId": "tools", "ti
 //chrome.contextMenus.create({ "id": "canceltransaction", "parentId": "tools", "title": "Cancel transactions", "contexts": ["all"], "onclick": function (e, f) { cancelTransactions(e); } });
 chrome.contextMenus.create({ "id": "versions", "parentId": "tools", "title": "Update Versions", "contexts": ["all"], "onclick": function (e, f) { openVersions(e, f) } });
 chrome.contextMenus.create({ "id": "stats", "parentId": "tools", "title": "stats.do", "contexts": ["all"], "onclick": function (e, f) { openUrl(e, f, '/stats.do') } });
-chrome.contextMenus.create({ "id": "codesnippets", "contexts": ["editable"], "title": "Code Snippets" });
-chrome.contextMenus.create({ "id": "worknotesnippets", "contexts": ["editable"], "title": "Worknote Snippets" });
+
 chrome.contextMenus.create({ "title": "Separator Context Menu", "type": "separator"});
 
 chrome.contextMenus.create({ "id": "businessrules", "title": "Business Rules", "contexts": ["all"], "onclick": function (e, f) { openUrl(e, f, '/sys_script_list.do?sysparm_order=sys_updated_on&sysparm_order_direction=desc') } });
@@ -80,12 +81,17 @@ chrome.contextMenus.create({ "id": "scriptincludes", "title": "Script Includes",
 chrome.contextMenus.create({ "id": "uiactions", "title": "UI Actions", "contexts": ["all"], "onclick": function (e, f) { openUrl(e, f, '/sys_ui_action_list.do?sysparm_order=sys_updated_on&sysparm_order_direction=desc') } });
 chrome.contextMenus.create({ "id": "uipolicies", "title": "UI Policies", "contexts": ["all"], "onclick": function (e, f) { openUrl(e, f, '/sys_ui_policy_list.do?sysparm_order=sys_updated_on&sysparm_order_direction=desc') } });
 chrome.contextMenus.create({ "title": "Separator Context Menu", "type": "separator"});
-chrome.contextMenus.create({ "id": "updates", "title": "Customer Updates (Today)", "contexts": ["all"], "onclick": function (e, f) { openUrl(e, f, '/sys_update_xml_list.do?sysparm_query=sys_updated_onONToday@javascript:gs.beginningOfToday()@javascript:gs.endOfToday()&sysparm_order=sys_updated_on&sysparm_order_direction=desc') } });
+chrome.contextMenus.create({ "id": "updates", "title": "Customer Updates", "contexts": ["all"], "onclick": function (e, f) { openUrl(e, f, '/sys_update_xml_list.do?sysparm_order=sys_updated_on&sysparm_order_direction=desc') } });
+// chrome.contextMenus.create({ "id": "updates", "title": "Customer Updates (Today)", "contexts": ["all"], "onclick": function (e, f) { openUrl(e, f, '/sys_update_xml_list.do?sysparm_query=sys_updated_onONToday@javascript:gs.beginningOfToday()@javascript:gs.endOfToday()&sysparm_order=sys_updated_on&sysparm_order_direction=desc') } });
 chrome.contextMenus.create({ "id": "updatesets", "title": "Update Sets", "contexts": ["all"], "onclick": function (e, f) { openUrl(e, f, '/sys_update_set_list.do?sysparm_order=sys_updated_on&sysparm_order_direction=desc') } });
 chrome.contextMenus.create({ "id": "users", "title": "Users", "contexts": ["all"], "onclick": function (e, f) { openUrl(e, f, '/sys_user_list.do?sysparm_order=sys_updated_on&sysparm_order_direction=desc') } });
 chrome.contextMenus.create({ "id": "syslogs", "title": "System Logs (Today)", "contexts": ["all"], "onclick": function (e, f) { openUrl(e, f, '/syslog_list.do?sysparm_query=sys_created_onONToday@javascript:gs.daysAgoStart(0)@javascript:gs.daysAgoEnd(0)&sysparm_order=sys_created_on&sysparm_order_direction=desc') } });
 chrome.contextMenus.create({ "id": "props", "title": "System Properties", "contexts": ["all"], "onclick": function (e, f) { openUrl(e, f, '/sys_properties_list.do?sysparm_order=sys_updated_on&sysparm_order_direction=desc') } });
 
+chrome.contextMenus.create({ "title": "Separator Context Menu", "type": "separator"});
+
+chrome.contextMenus.create({ "id": "codesnippets", "contexts": ["editable"], "title": "Code Snippets" });
+chrome.contextMenus.create({ "id": "worknotesnippets", "contexts": ["editable"], "title": "Worknote Snippets" });
 
 
 var snippets = {
@@ -286,6 +292,22 @@ function openSysProperty(e) {
     var srch = e.selectionText;
     if (srch.length < 40)
         chrome.tabs.create({ url: URL + "/sys_properties.do?sysparm_refkey=name&sys_id=" + srch });
+}
+
+function openUiPolicies(e) {
+    var tokens = e.pageUrl.split('/').slice(0, 3),
+        URL = tokens.join('/');
+    var srch = e.selectionText;
+    if (srch.length < 255)
+        chrome.tabs.create({ url: URL + "/sys_ui_policy_list.do?sysparm_query=short_description=" + srch });
+}
+
+function openUiPolicyActions(e) {
+    var tokens = e.pageUrl.split('/').slice(0, 3),
+        URL = tokens.join('/');
+    var srch = e.selectionText;
+    if (srch.length < 80)
+        chrome.tabs.create({ url: URL + "/sys_ui_policy_action_list.do?sysparm_query=field=" + srch });
 }
 
 function pop() {
