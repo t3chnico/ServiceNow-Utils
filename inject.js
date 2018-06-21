@@ -98,6 +98,15 @@ function doubleClickToShowField() {
     }
 }
 
+function setAllMandatoryFieldsToFalse() {
+    if (typeof g_form != 'undefined') {
+        var fields = g_form.getEditableFields();
+        for (var x = 0; x < fields.length; x++) {
+            g_form.setMandatory(fields[x], false);
+        }
+    }
+}
+
 function doubleClickToSetQueryListV2() {
     //dbl click to view and update filter condition
     jQuery('div.breadcrumb_container').on("dblclick", function (event) {
