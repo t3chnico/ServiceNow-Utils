@@ -28,6 +28,7 @@ if (typeof jQuery != "undefined") {
         bindPaste();
         initializeAutocomplete();
         extendReferenceIconsToOpenInTabs();
+        makeReadOnlyContentCopyable();
     
         //Initialize Alert
         var alertContainer = '<div class="notification-container service-now-util-alert" role="alert" style="top: 20px;"><div class="notification outputmsg outputmsg_has_text"><span class="outputmsg_text role="alert"></span></div></div>';
@@ -103,6 +104,18 @@ function setAllMandatoryFieldsToFalse() {
         var fields = g_form.getEditableFields();
         for (var x = 0; x < fields.length; x++) {
             g_form.setMandatory(fields[x], false);
+        }
+    }
+}
+
+/**
+ * this solves an issue where e.g. OOTB read-only Script Include content was not copyable
+ */
+function makeReadOnlyContentCopyable() {
+    if(g_glideEditorArray instanceof Array) {
+        for(var i = 0; i < g_glideEditorArray.length; i++) {
+            if(g_glideEditorArray[i].editor.getOption('readOnly') == 'nocursor')
+                g_glideEditorArray[i].editor.setOption('readOnly',true);
         }
     }
 }
