@@ -100,10 +100,15 @@ function doubleClickToShowField() {
 }
 
 function setAllMandatoryFieldsToFalse() {
-    if (typeof g_form != 'undefined') {
-        var fields = g_form.getEditableFields();
-        for (var x = 0; x < fields.length; x++) {
-            g_form.setMandatory(fields[x], false);
+    if (typeof g_form != 'undefined' && typeof g_user != 'undefined') {
+        if (g_user.hasRole('admin')) {
+            var fields = g_form.getEditableFields();
+            for (var x = 0; x < fields.length; x++) {
+                g_form.setMandatory(fields[x], false);
+            }
+            showAlert('Removed mandatory restriction from all fields.', 'success');
+        } else {
+            showAlert('Admin rights required.', 'danger');
         }
     }
 }
@@ -112,11 +117,15 @@ function setAllMandatoryFieldsToFalse() {
  * this solves an issue where e.g. OOTB read-only Script Include content was not copyable
  */
 function makeReadOnlyContentCopyable() {
-    if(g_glideEditorArray instanceof Array) {
-        for(var i = 0; i < g_glideEditorArray.length; i++) {
-            if(g_glideEditorArray[i].editor.getOption('readOnly') == 'nocursor')
-                g_glideEditorArray[i].editor.setOption('readOnly',true);
+    try {
+        if (g_glideEditorArray instanceof Array) {
+            for (var i = 0; i < g_glideEditorArray.length; i++) {
+                if (g_glideEditorArray[i].editor.getOption('readOnly') == 'nocursor')
+                    g_glideEditorArray[i].editor.setOption('readOnly', true);
+            }
         }
+    } catch (error) {
+        console.error(error)
     }
 }
 
@@ -733,11 +742,12 @@ function showAlert(msg, type, timeout) {
     msg = 'ServiceNow Utils (Chrome Extension): ' + msg;
     if (typeof type == 'undefined') type = 'info';
     if (typeof timeout == 'undefined') timeout = 3000;
-    jQuery('header .service-now-util-alert>div>span').html(msg);
-    jQuery('header .service-now-util-alert').addClass('visible');
-    jQuery('header .service-now-util-alert>.notification').addClass('notification-' + type);
+    var parent = window.parent.document;
+    jQuery('header .service-now-util-alert>div>span', parent).html(msg);
+    jQuery('header .service-now-util-alert', parent).addClass('visible');
+    jQuery('header .service-now-util-alert>.notification', parent).addClass('notification-' + type);
     setTimeout(function () {
-        jQuery('header .service-now-util-alert').removeClass('visible');
-        jQuery('header .service-now-util-alert>.notification').removeClass('notification-' + type);
+        jQuery('header .service-now-util-alert', parent).removeClass('visible');
+        jQuery('header .service-now-util-alert>.notification', parent).removeClass('notification-' + type);
     }, timeout)
 }
