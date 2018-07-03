@@ -10,28 +10,26 @@ var urlFull;
 var updateSetTables = [];
 
 //Attatch eventlistener, setting extension only active on *.service-now.com
-chrome.runtime.onInstalled.addListener(function () {
-    chrome.declarativeContent.onPageChanged.removeRules(undefined, function () {
-        chrome.declarativeContent.onPageChanged.addRules([
-            {
-                conditions: [
-                    new chrome.declarativeContent.PageStateMatcher({
-                        pageUrl: { urlContains: '.service-now.com' },
-                    })
-                ],
-                actions: [new chrome.declarativeContent.ShowPageAction()]
-            }
-        ]);
+chrome.runtime.onInstalled.addListener(function() {
+    chrome.declarativeContent.onPageChanged.removeRules(undefined, function() {
+        chrome.declarativeContent.onPageChanged.addRules([{
+            conditions: [
+                new chrome.declarativeContent.PageStateMatcher({
+                    pageUrl: { urlContains: '.service-now.com' },
+                })
+            ],
+            actions: [new chrome.declarativeContent.ShowPageAction()]
+        }]);
     });
 });
 
-chrome.runtime.onUpdateAvailable.addListener(function () {
+chrome.runtime.onUpdateAvailable.addListener(function() {
     //clear storage on update (just to keep it clean)
     chrome.storage.local.clear();
 });
 
 
-chrome.commands.onCommand.addListener(function (command) {
+chrome.commands.onCommand.addListener(function(command) {
     if (command == "show-technical-names")
         addTechnicalNames();
     else if (command == "pop")
@@ -69,27 +67,31 @@ chrome.contextMenus.create({ "id": "popinout", "parentId": "tools", "title": "Po
 chrome.contextMenus.create({ "id": "shownames", "parentId": "tools", "title": "Show technical names", "contexts": ["all"], "onclick": addTechnicalNames });
 chrome.contextMenus.create({ "id": "showselectfieldvalues", "parentId": "tools", "title": "Show Select-field values", "contexts": ["all"], "onclick": showSelectFieldValues });
 chrome.contextMenus.create({ "id": "setmandatoryfieldstofalse", "parentId": "tools", "title": "Set all fields to non-mandatory", "contexts": ["all"], "onclick": setAllMandatoryFieldsToFalse });
-chrome.contextMenus.create({ "id": "canceltransaction", "parentId": "tools", "title": "Cancel transactions", "contexts": ["all"], "onclick": function (e, f) { openUrl(e, f, '/cancel_my_transactions.do'); } });
+chrome.contextMenus.create({ "id": "canceltransaction", "parentId": "tools", "title": "Cancel transactions", "contexts": ["all"], "onclick": function(e, f) { openUrl(e, f, '/cancel_my_transactions.do'); } });
 //chrome.contextMenus.create({ "id": "canceltransaction", "parentId": "tools", "title": "Cancel transactions", "contexts": ["all"], "onclick": function (e, f) { cancelTransactions(e); } });
-chrome.contextMenus.create({ "id": "versions", "parentId": "tools", "title": "Update Versions", "contexts": ["all"], "onclick": function (e, f) { openVersions(e, f) } });
-chrome.contextMenus.create({ "id": "stats", "parentId": "tools", "title": "stats.do", "contexts": ["all"], "onclick": function (e, f) { openUrl(e, f, '/stats.do') } });
+chrome.contextMenus.create({ "id": "versions", "parentId": "tools", "title": "Update Versions", "contexts": ["all"], "onclick": function(e, f) { openVersions(e, f) } });
+chrome.contextMenus.create({ "id": "stats", "parentId": "tools", "title": "stats.do", "contexts": ["all"], "onclick": function(e, f) { openUrl(e, f, '/stats.do') } });
 
-chrome.contextMenus.create({ "title": "Separator Context Menu", "type": "separator"});
+chrome.contextMenus.create({ "title": "Separator Context Menu", "type": "separator" });
 
-chrome.contextMenus.create({ "id": "businessrules", "title": "Business Rules", "contexts": ["all"], "onclick": function (e, f) { openUrl(e, f, '/sys_script_list.do?sysparm_order=sys_updated_on&sysparm_order_direction=desc') } });
-chrome.contextMenus.create({ "id": "clientscripts", "title": "Client Scripts", "contexts": ["all"], "onclick": function (e, f) { openUrl(e, f, '/sys_script_client_list.do?sysparm_order=sys_updated_on&sysparm_order_direction=desc') } });
-chrome.contextMenus.create({ "id": "scriptincludes", "title": "Script Includes", "contexts": ["all"], "onclick": function (e, f) { openUrl(e, f, '/sys_script_include_list.do?sysparm_order=sys_updated_on&sysparm_order_direction=desc') } });
-chrome.contextMenus.create({ "id": "uiactions", "title": "UI Actions", "contexts": ["all"], "onclick": function (e, f) { openUrl(e, f, '/sys_ui_action_list.do?sysparm_order=sys_updated_on&sysparm_order_direction=desc') } });
-chrome.contextMenus.create({ "id": "uipolicies", "title": "UI Policies", "contexts": ["all"], "onclick": function (e, f) { openUrl(e, f, '/sys_ui_policy_list.do?sysparm_order=sys_updated_on&sysparm_order_direction=desc') } });
-chrome.contextMenus.create({ "title": "Separator Context Menu", "type": "separator"});
-chrome.contextMenus.create({ "id": "updates", "title": "Customer Updates", "contexts": ["all"], "onclick": function (e, f) { openUrl(e, f, '/sys_update_xml_list.do?sysparm_order=sys_updated_on&sysparm_order_direction=desc') } });
+chrome.contextMenus.create({ "id": "businessrules", "title": "Business Rules", "contexts": ["all"], "onclick": function(e, f) { openUrl(e, f, '/sys_script_list.do?sysparm_order=sys_updated_on&sysparm_order_direction=desc') } });
+chrome.contextMenus.create({ "id": "clientscripts", "title": "Client Scripts", "contexts": ["all"], "onclick": function(e, f) { openUrl(e, f, '/sys_script_client_list.do?sysparm_order=sys_updated_on&sysparm_order_direction=desc') } });
+chrome.contextMenus.create({ "id": "scriptincludes", "title": "Script Includes", "contexts": ["all"], "onclick": function(e, f) { openUrl(e, f, '/sys_script_include_list.do?sysparm_order=sys_updated_on&sysparm_order_direction=desc') } });
+chrome.contextMenus.create({ "id": "uiactions", "title": "UI Actions", "contexts": ["all"], "onclick": function(e, f) { openUrl(e, f, '/sys_ui_action_list.do?sysparm_order=sys_updated_on&sysparm_order_direction=desc') } });
+chrome.contextMenus.create({ "id": "uipolicies", "title": "UI Policies", "contexts": ["all"], "onclick": function(e, f) { openUrl(e, f, '/sys_ui_policy_list.do?sysparm_order=sys_updated_on&sysparm_order_direction=desc') } });
+chrome.contextMenus.create({ "id": "notification", "contexts": ["all"], "title": "Notification" });
+chrome.contextMenus.create({ "id": "notifications", "parentId": "notification", "title": "Notifications", "contexts": ["all"], "onclick": function(e, f) { openUrl(e, f, '/sysevent_email_action_list.do') } });
+chrome.contextMenus.create({ "id": "emailscripts", "parentId": "notification", "title": "Email scripts", "contexts": ["all"], "onclick": function(e, f) { openUrl(e, f, '/sys_script_email_list.do') } });
+chrome.contextMenus.create({ "id": "emailtemplates", "parentId": "notification", "title": "Templates", "contexts": ["all"], "onclick": function(e, f) { openUrl(e, f, '/sysevent_email_template_list.do') } });
+chrome.contextMenus.create({ "title": "Separator Context Menu", "type": "separator" });
+chrome.contextMenus.create({ "id": "updates", "title": "Customer Updates", "contexts": ["all"], "onclick": function(e, f) { openUrl(e, f, '/sys_update_xml_list.do?sysparm_order=sys_updated_on&sysparm_order_direction=desc') } });
 // chrome.contextMenus.create({ "id": "updates", "title": "Customer Updates (Today)", "contexts": ["all"], "onclick": function (e, f) { openUrl(e, f, '/sys_update_xml_list.do?sysparm_query=sys_updated_onONToday@javascript:gs.beginningOfToday()@javascript:gs.endOfToday()&sysparm_order=sys_updated_on&sysparm_order_direction=desc') } });
-chrome.contextMenus.create({ "id": "updatesets", "title": "Update Sets", "contexts": ["all"], "onclick": function (e, f) { openUrl(e, f, '/sys_update_set_list.do?sysparm_order=sys_updated_on&sysparm_order_direction=desc') } });
-chrome.contextMenus.create({ "id": "users", "title": "Users", "contexts": ["all"], "onclick": function (e, f) { openUrl(e, f, '/sys_user_list.do?sysparm_order=sys_updated_on&sysparm_order_direction=desc') } });
-chrome.contextMenus.create({ "id": "syslogs", "title": "System Logs (Today)", "contexts": ["all"], "onclick": function (e, f) { openUrl(e, f, '/syslog_list.do?sysparm_query=sys_created_onONToday@javascript:gs.daysAgoStart(0)@javascript:gs.daysAgoEnd(0)&sysparm_order=sys_created_on&sysparm_order_direction=desc') } });
-chrome.contextMenus.create({ "id": "props", "title": "System Properties", "contexts": ["all"], "onclick": function (e, f) { openUrl(e, f, '/sys_properties_list.do?sysparm_order=sys_updated_on&sysparm_order_direction=desc') } });
+chrome.contextMenus.create({ "id": "updatesets", "title": "Update Sets", "contexts": ["all"], "onclick": function(e, f) { openUrl(e, f, '/sys_update_set_list.do?sysparm_order=sys_updated_on&sysparm_order_direction=desc') } });
+chrome.contextMenus.create({ "id": "users", "title": "Users", "contexts": ["all"], "onclick": function(e, f) { openUrl(e, f, '/sys_user_list.do?sysparm_order=sys_updated_on&sysparm_order_direction=desc') } });
+chrome.contextMenus.create({ "id": "syslogs", "title": "System Logs (Today)", "contexts": ["all"], "onclick": function(e, f) { openUrl(e, f, '/syslog_list.do?sysparm_query=sys_created_onONToday@javascript:gs.daysAgoStart(0)@javascript:gs.daysAgoEnd(0)&sysparm_order=sys_created_on&sysparm_order_direction=desc') } });
+chrome.contextMenus.create({ "id": "props", "title": "System Properties", "contexts": ["all"], "onclick": function(e, f) { openUrl(e, f, '/sys_properties_list.do?sysparm_order=sys_updated_on&sysparm_order_direction=desc') } });
 
-chrome.contextMenus.create({ "title": "Separator Context Menu", "type": "separator"});
+chrome.contextMenus.create({ "title": "Separator Context Menu", "type": "separator" });
 
 chrome.contextMenus.create({ "id": "codesnippets", "contexts": ["editable"], "title": "Code Snippets" });
 chrome.contextMenus.create({ "id": "worknotesnippets", "contexts": ["editable"], "title": "Worknote Snippets" });
@@ -167,7 +169,7 @@ for (var snip in snippets) {
 
 function insertSnippet(e, f) {
 
-    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+    chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
         var pretext = '';
         if (snippets[e.menuItemId][2] == "codessnippet")
             pretext = "// Below snippet inserted via SN Utils Chrome Extension\n";
@@ -179,7 +181,7 @@ function insertSnippet(e, f) {
 
 
 
-chrome.contextMenus.onClicked.addListener(function (clickData, tab) {
+chrome.contextMenus.onClicked.addListener(function(clickData, tab) {
     if (clickData.menuItemId == "popinout")
         togglePop(clickData, tab.id);
 });
@@ -187,28 +189,25 @@ chrome.contextMenus.onClicked.addListener(function (clickData, tab) {
 
 function addTechnicalNames() {
 
-    chrome.tabs.query(
-        { currentWindow: true, active: true },
-        function (tabs) {
-            chrome.tabs.sendMessage(tabs[0].id, { method: "runFunction", myVars: "addTechnicalNames();", funtion() { } });
+    chrome.tabs.query({ currentWindow: true, active: true },
+        function(tabs) {
+            chrome.tabs.sendMessage(tabs[0].id, { method: "runFunction", myVars: "addTechnicalNames();", funtion() {} });
 
         })
 
 }
 
 function showSelectFieldValues() {
-    chrome.tabs.query(
-        { currentWindow: true, active: true },
-        function (tabs) {
-            chrome.tabs.sendMessage(tabs[0].id, { method: "runFunction", myVars: "showSelectFieldValues();", funtion() { } });
+    chrome.tabs.query({ currentWindow: true, active: true },
+        function(tabs) {
+            chrome.tabs.sendMessage(tabs[0].id, { method: "runFunction", myVars: "showSelectFieldValues();", funtion() {} });
         });
 }
 
-function setAllMandatoryFieldsToFalse () {
-    chrome.tabs.query(
-        { currentWindow: true, active: true },
-        function (tabs) {
-            chrome.tabs.sendMessage(tabs[0].id, { method: "runFunction", myVars: "setAllMandatoryFieldsToFalse ();", funtion() { } });
+function setAllMandatoryFieldsToFalse() {
+    chrome.tabs.query({ currentWindow: true, active: true },
+        function(tabs) {
+            chrome.tabs.sendMessage(tabs[0].id, { method: "runFunction", myVars: "setAllMandatoryFieldsToFalse ();", funtion() {} });
         });
 }
 
@@ -233,12 +232,12 @@ function openVersions(e, f) {
 
     if (sys_id) {
 
-        getGck(function () {
+        getGck(function() {
             sys_id = sysId || sys_id;
             loadXMLDoc(g_ck,
                 baseurl + "/api/now/stats/sys_update_version?sysparm_count=true&sysparm_query=name=" + updateName + sys_id,
                 null,
-                function (jsn) {
+                function(jsn) {
                     if (typeof jsn == "undefined" || jsn == "error")
                         alert("No access to Update Versions");
                     else if (Number(jsn.result.stats.count))
@@ -247,8 +246,7 @@ function openVersions(e, f) {
                         alert("No Update versions found for record: " + updateName + sys_id);
                 });
         });
-    }
-    else
+    } else
         alert("No table and sys_id found in this page / frame");
 
 }
@@ -256,10 +254,9 @@ function openVersions(e, f) {
 function cancelTransactions(e) {
     var tokens = e.pageUrl.split('/').slice(0, 3);
     var url = tokens.join('/');
-    jQuery.get(url + '/cancel_my_transactions.do', function (r) {
+    jQuery.get(url + '/cancel_my_transactions.do', function(r) {
         alert(r);
-    }
-    )
+    })
 }
 
 
@@ -323,7 +320,7 @@ function pop() {
     chrome.tabs.query({
         active: true,
         currentWindow: true
-    }, function (tabs) {
+    }, function(tabs) {
         var u = tabs[0].url;
         var tid = tabs[0].id;
         var baseUrl = u.substring(0, u.indexOf(".com/") + 4);
@@ -333,8 +330,7 @@ function pop() {
             chrome.tabs.update(tid, {
                 url: baseUrl + pth
             })
-        }
-        else {
+        } else {
             var pth = "/nav_to.do?uri=" + encodeURIComponent(u.substring(u.indexOf(".com/") + 5, 1000));
             chrome.tabs.update(tid, {
                 url: baseUrl + pth
@@ -355,8 +351,7 @@ function togglePop(clickData, tid) {
         chrome.tabs.update(tid, {
             url: frameHref
         })
-    }
-    else {
+    } else {
         var newHref = encodeURIComponent(clickData.pageUrl.replace(urlFull, ''));
         var newUrl = urlFull + '/nav_to.do?uri=' + newHref;
         chrome.tabs.update(tid, {
@@ -369,17 +364,16 @@ function togglePop(clickData, tid) {
 
 //This listens for messages from FileSyncer and saves back scripts to the instance.
 chrome.runtime.onMessageExternal.addListener(
-    function (request, sender, sendResponse) {
+    function(request, sender, sendResponse) {
         //console.log(request);
         if (request.details) {
             loadXMLDoc(g_ck,
                 url + '/api/now/table/' + request.details[2] + '/' + request.details[4].split('.')[0],
                 "{" + request.details[3] + ":" + JSON.stringify(request.details[1]) + "}",
-                function (resp) {
+                function(resp) {
                     sendResponse({ result: "saved" });
                 });
-        }
-        else if (request.instance) {
+        } else if (request.instance) {
             sendResponse({ instance: (instance || 'not set') });
         }
     });
@@ -389,7 +383,7 @@ chrome.runtime.onMessageExternal.addListener(
 function getBrowserVariables(tid) {
     tabid = tid;
     popup = chrome.extension.getViews({ type: "popup" })[0];
-    chrome.tabs.sendMessage(tabid, { method: "getVars", myVars: "g_ck,g_user_date_time_format,NOW.user.roles,NOW.user.name,NOW.user_name" }, function (response) {
+    chrome.tabs.sendMessage(tabid, { method: "getVars", myVars: "g_ck,g_user_date_time_format,NOW.user.roles,NOW.user.name,NOW.user_name" }, function(response) {
         g_ck = response.myVars.g_ck || '';
         url = response.url;
         instance = url.replace("https://", "").replace(".service-now.com", "");
@@ -403,8 +397,8 @@ function getGck(callback) {
     if (g_ck && sysId)
         callback();
     else {
-        chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-            chrome.tabs.sendMessage(tabs[0].id, { method: "getVars", myVars: "g_ck,NOW.sysId" }, function (response) {
+        chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
+            chrome.tabs.sendMessage(tabs[0].id, { method: "getVars", myVars: "g_ck,NOW.sysId" }, function(response) {
                 g_ck = response.myVars.g_ck || '';
                 sysId = response.myVars.NOWsysId || '';
                 callback();
@@ -418,7 +412,7 @@ function getGck(callback) {
 //Try to retrieve current table and syid from browser tab, passing them back to popup
 function getRecordVariables(scriptscync) {
     popup = chrome.extension.getViews({ type: "popup" })[0];
-    chrome.tabs.sendMessage(tabid, { method: "getVars", myVars: "NOW.targetTable,NOW.sysId,mySysId,document.cookie" }, function (response) {
+    chrome.tabs.sendMessage(tabid, { method: "getVars", myVars: "NOW.targetTable,NOW.sysId,mySysId,document.cookie" }, function(response) {
         popup.setRecordVariables(response, scriptscync);
     });
 }
@@ -429,9 +423,9 @@ function getGRQuery(varName, template) {
 
     popup = chrome.extension.getViews({ type: "popup" })[0];
 
-    chrome.tabs.sendMessage(tabid, { method: "runFunction", myVars: "getListV3Fields()" }, function () {
+    chrome.tabs.sendMessage(tabid, { method: "runFunction", myVars: "getListV3Fields()" }, function() {
 
-        chrome.tabs.sendMessage(tabid, { method: "getVars", myVars: "g_list.filter,g_list.tableName,g_list.sortBy,g_list.sortDir,g_list.rowsPerPage,g_list.fields" }, function (response) {
+        chrome.tabs.sendMessage(tabid, { method: "getVars", myVars: "g_list.filter,g_list.tableName,g_list.sortBy,g_list.sortDir,g_list.rowsPerPage,g_list.fields" }, function(response) {
             var tableName = response.myVars.g_listtableName;
             var encQuery = response.myVars.g_listfilter;
             var orderBy = response.myVars.g_listsortBy;
@@ -452,8 +446,7 @@ function getGRQuery(varName, template) {
                 for (var i = 0; i < fields.length; i++) {
                     queryStr += "    " + template.replace(/\{0\}/g, varName).replace(/\{1\}/g, fields[i]) + "\n";
                 }
-            }
-            else
+            } else
                 queryStr += "\n\n    //todo: code ;)\n\n"
             queryStr += "    //" + varName + ".update();\n";
             queryStr += "    //" + varName + ".insert();\n";
@@ -470,7 +463,7 @@ function getGRQueryForm(varName, template) {
 
     popup = chrome.extension.getViews({ type: "popup" })[0];
 
-    chrome.tabs.sendMessage(tabid, { method: "getVars", myVars: "g_form.tableName,NOW.sysId,mySysId,elNames" }, function (response) {
+    chrome.tabs.sendMessage(tabid, { method: "getVars", myVars: "g_form.tableName,NOW.sysId,mySysId,elNames" }, function(response) {
         var tableName = response.myVars.g_formtableName;
         var sysId = response.myVars.NOWsysId || response.myVars.mySysId;
         var fields = ('' + response.myVars.elNames).split(',');
@@ -481,8 +474,7 @@ function getGRQueryForm(varName, template) {
             for (var i = 0; i < fields.length; i++) {
                 queryStr += "    " + template.replace(/\{0\}/g, varName).replace(/\{1\}/g, fields[i]) + "\n";
             }
-        }
-        else
+        } else
             queryStr += "\n\n    //todo: code ;)\n\n"
         queryStr += "    //" + varName + ".update();\n";
         queryStr += "    //" + varName + ".insert();\n";
@@ -497,7 +489,7 @@ function getGRQueryForm(varName, template) {
 function getUserDetails(userName) {
 
     var myurl = url + "/api/now/table/sys_user?sysparm_display_value=all&sysparm_query=user_name%3D" + userName;
-    loadXMLDoc(g_ck, myurl, null, function (fetchResult) {
+    loadXMLDoc(g_ck, myurl, null, function(fetchResult) {
         var listhyperlink = " <a target='_blank' href='" + url + "/sys_user_list.do?sysparm_query=user_nameLIKE" + userName + "%5EORnameLIKE" + userName + "'> <i class='fa fa-list' aria-hidden='true'></i></a>";
 
         if (fetchResult.result.length > 0) {
@@ -515,8 +507,7 @@ function getUserDetails(userName) {
                 "<tr><td>Phone:</td><td>" + usr.phone.display_value + "</td></tr>" +
                 "<tr><td>E-mail:</td><td><a href='mailto:" + usr.email.display_value + "'>" + usr.email.display_value + "</a></td></tr></table>";
             popup.setUserDetails(html);
-        }
-        else {
+        } else {
             var html = "<br /><table class='table table-condensed table-bordered table-striped'><tr><th>User details</th><th>" + userName + listhyperlink + "</th></tr>" +
                 "<tr><td>Result:</td><td>No exact match, try clicking the list icon.</td></tr></table>";
             popup.setUserDetails(html);
@@ -528,7 +519,7 @@ function getUserDetails(userName) {
 //Query ServiceNow for tables, pass JSON back to popup
 function getTables() {
     var myurl = url + '/api/now/table/sys_db_object?sysparm_fields=name,label&sysparm_query=sys_update_nameISNOTEMPTY^nameNOT LIKE00%5EORDERBYlabel';
-    loadXMLDoc(g_ck, myurl, null, function (jsn) {
+    loadXMLDoc(g_ck, myurl, null, function(jsn) {
         popup.setTables(jsn.result);
     });
 }
@@ -539,7 +530,7 @@ function setUpdateSetTables() {
 
     var myurl = url + "/api/now/table/sys_dictionary?sysparm_fields=name&sysparm_query=" +
         "name=javascript:new PAUtils().getTableDecendants('sys_metadata')^internal_type=collection^attributesNOT LIKEupdate_synch=false^NQattributesLIKEupdate_synch=true";
-    loadXMLDoc(g_ck, myurl, null, function (jsn) {
+    loadXMLDoc(g_ck, myurl, null, function(jsn) {
 
         var tbls = [];
         for (var t in jsn.result) {
@@ -556,16 +547,14 @@ function getUpdateSetTables() {
 
 
     var query = [instance + "-updatesettables", instance + "-updatesettables-date"];
-    chrome.storage.local.get(query, function (result) {
+    chrome.storage.local.get(query, function(result) {
         try {
             var thedate = new Date().toDateString();
             if (thedate == result[query[1]].toString()) {
                 updateSetTables = result[query[0]];
-            }
-            else
+            } else
                 setUpdateSetTables()
-        }
-        catch (err) {
+        } catch (err) {
             setUpdateSetTables();
         }
     })
@@ -578,7 +567,7 @@ function setToChromeStorage(theName, theValue) {
     var myobj = {};
     myobj[instance + "-" + theName] = theValue;
     myobj[instance + "-" + theName + "-date"] = new Date().toDateString();
-    chrome.storage.local.set(myobj, function () {
+    chrome.storage.local.set(myobj, function() {
 
     });
 }
@@ -589,7 +578,7 @@ function setToChromeStorage(theName, theValue) {
 //Query ServiceNow for nodes
 function getNodes() {
     var myurl = url + '/api/now/table/v_cluster_nodes?sysparm_query=ORDERBYname&sysparm_fields=node&sysparm_display_value=all';
-    loadXMLDoc(g_ck, myurl, null, function (jsn) {
+    loadXMLDoc(g_ck, myurl, null, function(jsn) {
         popup.setNodes(jsn.result);
     });
 }
@@ -597,7 +586,7 @@ function getNodes() {
 function setActiveNode(nodeId, nodeName) {
 
 
-    $.get(url + '/stats.do', function (statsDo) {
+    $.get(url + '/stats.do', function(statsDo) {
 
         var ipArr = statsDo
             .match(/IP address: ([\s\S]*?)\<br\/>/g)[0]
@@ -617,7 +606,7 @@ function setActiveNode(nodeId, nodeName) {
 
 
         var myurl = url + '/api/now/table/sys_cluster_state?sysparm_query=node_id=' + nodeId + '&sysparm_fields=stats';
-        loadXMLDoc(g_ck, myurl, null, function (jsn) {
+        loadXMLDoc(g_ck, myurl, null, function(jsn) {
             var port = ($($.parseXML(jsn.result[0].stats)).find('servlet\\.port').text());
             var encodedPort = Math.floor(port / 256) + (port % 256) * 256;
             var encodeBIGIP = encodedIP + '.' + encodedPort + '.0000';
@@ -627,14 +616,14 @@ function setActiveNode(nodeId, nodeName) {
                 "secure": true,
                 "httpOnly": true,
                 "value": encodeBIGIP
-            }, function (s) {
+            }, function(s) {
                 chrome.cookies.set({
                     "name": "glide_user_route",
                     "url": "https://" + instance + ".service-now.com",
                     "secure": true,
                     "httpOnly": true,
                     "value": 'glide.' + nodeId
-                }, function (s) {
+                }, function(s) {
                     getActiveNode(jsnNodes);
                 });
             });
@@ -654,7 +643,7 @@ function getActiveNode(jsn) {
     chrome.cookies.get({
         "name": "glide_user_route",
         "url": "https://" + instance + ".service-now.com"
-    }, function (c) {
+    }, function(c) {
         popup.setDataTableNodes(jsnNodes, c.value.replace('glide.', ''));
     });
 }
@@ -666,7 +655,7 @@ function getActiveNode(jsn) {
 function getExploreData() {
 
     popup = chrome.extension.getViews({ type: "popup" })[0];
-    chrome.tabs.sendMessage(tabid, { method: "getVars", myVars: "g_form.tableName,NOW.sysId,mySysId,elNames" }, function (response) {
+    chrome.tabs.sendMessage(tabid, { method: "getVars", myVars: "g_form.tableName,NOW.sysId,mySysId,elNames" }, function(response) {
         var tableName = response.myVars.g_formtableName;
         var sysId = response.myVars.NOWsysId || response.myVars.mySysId;
 
@@ -677,12 +666,12 @@ function getExploreData() {
         }
 
         var myurl = url + '/api/now/ui/meta/' + tableName;
-        loadXMLDoc(g_ck, myurl, null, function (metaData) {
+        loadXMLDoc(g_ck, myurl, null, function(metaData) {
             var query = '';
             if (sysId)
                 query = '&sysparm_query=sys_id%3D' + sysId;
             var myurl = url + '/api/now/table/' + tableName + '?sysparm_display_value=all&sysparm_limit=1' + query;
-            loadXMLDoc(g_ck, myurl, null, function (jsn) {
+            loadXMLDoc(g_ck, myurl, null, function(jsn) {
 
                 var dataExplore = [];
                 var propObj = {};
@@ -726,7 +715,7 @@ function getExploreData() {
 
 function getScriptFields() {
     var myurl = url + '/api/now/table/sys_dictionary?sysparm_display_value=true&sysparm_fields=name,element,internal_type.name&sysparm_query=internal_type.labelLIKEhtml^ORinternal_type.labelLIKEscript^ORinternal_type.labelLIKExml^ORinternal_type.labelLIKEcss';
-    loadXMLDoc(g_ck, myurl, null, function (jsn) {
+    loadXMLDoc(g_ck, myurl, null, function(jsn) {
         popup.setScriptFields(jsn.result);
     });
 }
@@ -734,7 +723,7 @@ function getScriptFields() {
 //Query ServiceNow for updatsets, pass JSON back to popup
 function getUpdateSets() {
     var myurl = url + '/api/now/ui/concoursepicker/updateset';
-    loadXMLDoc(g_ck, myurl, null, function (jsn) {
+    loadXMLDoc(g_ck, myurl, null, function(jsn) {
         popup.setDataTableUpdateSets(jsn);
     });
 }
@@ -743,7 +732,7 @@ function getUpdateSets() {
 //Query ServiceNow for updaes by current user, pass JSON back to popup
 function getUpdates(username) {
     var myurl = url + '/api/now/table/sys_update_xml?sysparm_display_value=true&sysparm_fields=sys_id%2Ctype%2Cname%2Ctarget_name%2Cupdate_set.name%2Csys_updated_on%2Csys_updated_by&sysparm_query=sys_updated_byLIKE' + username + '%5EORDERBYDESCsys_updated_on&sysparm_limit=20';
-    loadXMLDoc(g_ck, myurl, null, function (jsn) {
+    loadXMLDoc(g_ck, myurl, null, function(jsn) {
         popup.setDataTableUpdates(jsn);
     });
 }
@@ -751,7 +740,7 @@ function getUpdates(username) {
 //Set active updateset and refresh list on popup after it
 function setUpdateSet(data) {
     var myurl = url + '/api/now/ui/concoursepicker/updateset';
-    loadXMLDoc(g_ck, myurl, data, function (jsn) {
+    loadXMLDoc(g_ck, myurl, data, function(jsn) {
         getUpdateSets();
     });
 }
@@ -777,9 +766,9 @@ function loadXMLDoc(token, url, post, callback) {
         method: method,
         data: post,
         headers: hdrs
-    }).done(function (rspns) {
+    }).done(function(rspns) {
         callback(rspns);
-    }).fail(function (jqXHR, textStatus) {
+    }).fail(function(jqXHR, textStatus) {
         callback(textStatus);
     });
 
