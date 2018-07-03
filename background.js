@@ -79,10 +79,12 @@ chrome.contextMenus.create({ "id": "clientscripts", "title": "Client Scripts", "
 chrome.contextMenus.create({ "id": "scriptincludes", "title": "Script Includes", "contexts": ["all"], "onclick": function(e, f) { openUrl(e, f, '/sys_script_include_list.do?sysparm_order=sys_updated_on&sysparm_order_direction=desc') } });
 chrome.contextMenus.create({ "id": "uiactions", "title": "UI Actions", "contexts": ["all"], "onclick": function(e, f) { openUrl(e, f, '/sys_ui_action_list.do?sysparm_order=sys_updated_on&sysparm_order_direction=desc') } });
 chrome.contextMenus.create({ "id": "uipolicies", "title": "UI Policies", "contexts": ["all"], "onclick": function(e, f) { openUrl(e, f, '/sys_ui_policy_list.do?sysparm_order=sys_updated_on&sysparm_order_direction=desc') } });
+
 chrome.contextMenus.create({ "id": "notification", "contexts": ["all"], "title": "Notification" });
 chrome.contextMenus.create({ "id": "notifications", "parentId": "notification", "title": "Notifications", "contexts": ["all"], "onclick": function(e, f) { openUrl(e, f, '/sysevent_email_action_list.do') } });
 chrome.contextMenus.create({ "id": "emailscripts", "parentId": "notification", "title": "Email scripts", "contexts": ["all"], "onclick": function(e, f) { openUrl(e, f, '/sys_script_email_list.do') } });
 chrome.contextMenus.create({ "id": "emailtemplates", "parentId": "notification", "title": "Templates", "contexts": ["all"], "onclick": function(e, f) { openUrl(e, f, '/sysevent_email_template_list.do') } });
+
 chrome.contextMenus.create({ "title": "Separator Context Menu", "type": "separator" });
 chrome.contextMenus.create({ "id": "updates", "title": "Customer Updates", "contexts": ["all"], "onclick": function(e, f) { openUrl(e, f, '/sys_update_xml_list.do?sysparm_order=sys_updated_on&sysparm_order_direction=desc') } });
 // chrome.contextMenus.create({ "id": "updates", "title": "Customer Updates (Today)", "contexts": ["all"], "onclick": function (e, f) { openUrl(e, f, '/sys_update_xml_list.do?sysparm_query=sys_updated_onONToday@javascript:gs.beginningOfToday()@javascript:gs.endOfToday()&sysparm_order=sys_updated_on&sysparm_order_direction=desc') } });
